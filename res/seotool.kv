@@ -1,0 +1,91 @@
+# Custom button
+<CustLble@Label>:
+    size: self.texture_size
+    font_name: "rounded-mgenplus-2pp-medium"
+    color: 0.3, 0.3, 0.3, 1
+
+<CustText@TextInput>:
+    font_name: "rounded-mgenplus-2pp-medium"
+    write_tab: False
+    font_size: 20
+    multiline: False
+    height: 48
+    font_name: "rounded-mgenplus-2pp-medium"
+
+# Define id so I can refer to the CalcGridLayout
+# class functions
+# Display points to the entry widget
+<SeoGridLayout>:
+    id: info
+    # display: entry
+    rows: 6
+    padding: 5
+    spacing: 10
+    row_default_height: 48
+    # row_force_default: True
+
+    # Where input is displayed
+    BoxLayout:
+        size_hint_y: 0.1
+        CustLble:
+            text: "URLを入力してください：" if "http://" in url.text or "https://" in url.text  else "URLを入力してください：必須"
+
+        CustText:
+            id: url
+
+    BoxLayout:
+        size_hint_y: 0.1
+        CustLble:
+            text: "クロールの深さ："
+        CustText:
+            id: depth
+            input_filter: 'int'
+
+    BoxLayout:
+        size_hint_y: 0.1
+        CustLble:
+            text: "basic 認証："
+        CustText:
+            id: auth_id
+            hint_text: "ID"
+            size_hint_x: 0.5
+        CustText:
+            id: auth_pass
+            hint_text: "PASS"
+            size_hint_x: 0.5
+            password: True
+
+    BoxLayout:
+        size_hint_y: 0.1
+        CustLble:
+            text: "csv ファイル名："
+        CustText:
+            id: filename
+
+    BoxLayout:
+        size_hint_y: 0.1
+        Button:
+            id: run
+            font_name: "rounded-mgenplus-2pp-medium"
+            disabled: False if "http://" in url.text or "https://" in url.text  else True
+            text: "実行"
+            on_press: info.seo_run()
+
+        Button:
+            id: cancel
+            font_name: "rounded-mgenplus-2pp-medium"
+            disabled: False if (run.disabled == True and ("http://" in url.text or "https://" in url.text)) else True
+            text: "中止"
+            on_press: info.cancel_crawl()
+
+    ScrollView:
+        id: fetched_urls
+        GridLayout:
+            background_color: "white"
+            id: layout_content
+            size_hint_y: None
+            height: self.minimum_height
+            cols: 2
+            row_default_height: '100dp'
+            row_force_default: True
+            spacing: 0, 5
